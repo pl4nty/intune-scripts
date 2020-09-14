@@ -6,10 +6,10 @@ Get-IntuneApplication | Where isAssigned -eq $true | Select displayName,id | For
 
         $od = "@odata.type"
         If ($_.target.$od -like "*exclusionGroupAssignmentTarget*") {
-            $type = "Include"
+            $type = "Exclude"
             $group = (Get-AADGroup -Id $_.target.groupId).displayName
         } elseif ($_.target.$od -like "*groupAssignmentTarget*") {
-            $type = "Exclude"
+            $type = "Include"
             $group = (Get-AADGroup -Id $_.target.groupId).displayName
         } elseif ($_.target.$od -like "*allLicensedUsers*") {
             $type = "Include"
@@ -26,4 +26,4 @@ Get-IntuneApplication | Where isAssigned -eq $true | Select displayName,id | For
             Group = $group
         } | Select-Object App,Intent,Type,Group
     } 
-}
+} | Export-CSV ./apps.csv
